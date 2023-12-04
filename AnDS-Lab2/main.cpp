@@ -212,3 +212,59 @@ public:
         head = prev;
     }
 
+    // Вывод списка в виде башни
+    void printTowerWithColumn(const std::string& columnName) const {
+        Node<T>* current = head;
+        while (current) {
+            std::cout << "Column " << columnName << ": " << current->data << std::endl;
+            current = current->next;
+        }
+    }
+};
+
+// Решение задачи о Ханойской башне
+template <typename T>
+void hanoiTower(int n, const std::string& sourceColumn, const std::string& auxiliaryColumn, const std::string& destinationColumn,
+    LinkedList<T>& source, LinkedList<T>& auxiliary, LinkedList<T>& destination) {
+    if (n > 0) {
+        hanoiTower(n - 1, sourceColumn, destinationColumn, auxiliaryColumn, source, destination, auxiliary);
+
+        std::cout << "Move disk " << source[0] << " from Column " << sourceColumn << " to Column " << destinationColumn << std::endl;
+        destination.push_tail(source[0]);
+        source.pop_head();
+
+        std::cout << "Source Tower:" << std::endl;
+        source.printTowerWithColumn(sourceColumn);
+        std::cout << "Auxiliary Tower:" << std::endl;
+        auxiliary.printTowerWithColumn(auxiliaryColumn);
+        std::cout << "Destination Tower:" << std::endl;
+        destination.printTowerWithColumn(destinationColumn);
+        std::cout << "-------------" << std::endl;
+
+        hanoiTower(n - 1, auxiliaryColumn, sourceColumn, destinationColumn, auxiliary, source, destination);
+    }
+}
+
+int main() {
+
+    LinkedList<int> source(3);
+    LinkedList<int> auxiliary;
+    LinkedList<int> destination;
+
+    std::cout << "Source Tower:" << std::endl;
+    source.printTowerWithColumn("A");
+    std::cout << "Auxiliary Tower:" << std::endl;
+    auxiliary.printTowerWithColumn("B");
+    std::cout << "Destination Tower:" << std::endl;
+    destination.printTowerWithColumn("C");
+    std::cout << "-------------" << std::endl;
+
+    try {
+        hanoiTower(3, "A", "B", "C", source, auxiliary, destination);
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
+
+    return 0;
+}
